@@ -12,8 +12,6 @@ class Data():
                  X: np.ndarray,
                  df: pd.DataFrame) -> None:
 
-        X_DL = df[Config.TICKET_SUMMARY] + ' ' + df[Config.INTERACTION_CONTENT]
-        X_DL = X_DL.to_numpy()
         y = df.y.to_numpy()
         y_series = pd.Series(y)
 
