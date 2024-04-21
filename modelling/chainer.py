@@ -14,7 +14,6 @@ class Chainer:
     def chain_into_one_target_var(self, df):
         """
         Chain multiple columns into one target variable
-        :param columns_to_chain: list of columns to chain
         :param df: dataframe
         :return: dataframe
         """
