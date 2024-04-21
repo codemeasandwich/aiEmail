@@ -19,8 +19,6 @@ class Chainer:
         :return: dataframe
         """
 
-
-
         # Fit the encoder and transform the specified columns
         encoded_data = self.encoder.fit_transform(df[self.columns_to_chain])
 
@@ -34,18 +32,14 @@ class Chainer:
 
     def decode_unchained(self, y):
 
-        vfunc = np.vectorize(lambda s: [float(i) for i in s], otypes=[list])
-
+        vfunc = np.vectorize(lambda s: [np.float64(i) for i in s], otypes=[list])
         y = vfunc(y)
-
-        # Reshape y to the appropriate shape for decoding
-        y = y.reshape(-1, 1)
 
 
         # Split the combined data and reshape it into the appropriate shape for decoding
-        decoded_data = self.encoder.inverse_transform(y)
+        decoded_data = self.encoder.inverse_transform([list(row) for row in y])
+
+        concatenated_data = np.array([' ||| '.join(map(str, row)) for row in decoded_data])
 
         # Create a DataFrame with the decoded data
-        decoded_df = pd.DataFrame(decoded_data, columns=self.columns_to_chain)
-
-        return decoded_df
+        return concatenated_data

@@ -40,13 +40,14 @@ class RandomForest(BaseModel):
 
     def predict(self, X_test: pd.Series, chainer:Chainer=None) -> None:
         predictions = self.mdl.predict(X_test)
-        # if chainer is not None:
-        #     predictions = chainer.decode_unchained(predictions)
+        if chainer is not None:
+            predictions = chainer.decode_unchained(predictions)
 
         self.predictions = predictions
 
-    def print_results(self, data):
-        print(classification_report(data.y_test, self.predictions))
+    def print_results(self, data, chainer:Chainer=None) -> None:
+
+        print(classification_report(chainer.decode_unchained(data.y_test), self.predictions))
 
     def data_transform(self) -> None:
         ...
