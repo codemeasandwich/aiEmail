@@ -28,14 +28,19 @@ class Data():
         X_good = X[y_series.isin(good_y_value)]
 
         new_test_size = X.shape[0] * 0.2 / X_good.shape[0]
-
-
-        self.X_train, self.X_test, self.y_train, self.y_test= train_test_split(X_good, y_good, test_size=new_test_size, random_state=0, stratify=y_good)
+        self.X_train, self.X_test, self.y_train, self.y_test, self.X_DL_train, self.X_DL_test = train_test_split(
+            X_good, y_good, X_DL[y_series.isin(good_y_value)], test_size=new_test_size, random_state=0, stratify=y_good
+        )
         self.y = y_good
         self.classes = good_y_value
         self.embeddings = X
-
-
+        
+        train_indices = np.isin(y, self.y_train)
+        self.train_df = df[train_indices]
+        
+        test_indices = np.isin(y, self.y_test)
+        self.test_df = df[test_indices]
+        
     def get_type(self):
         return  self.y
     def get_X_train(self):
