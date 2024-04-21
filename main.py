@@ -43,4 +43,4 @@ if __name__ == '__main__':
         X, group_df = get_embeddings(group_df)
         data = get_data_object(X, group_df)
         perform_modelling(data, group_df, name)
-
+        model_predict_chained(data, group_df, name) 
