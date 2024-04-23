@@ -11,8 +11,18 @@ def get_input_data()->pd.DataFrame:
     df = pd.concat([df1, df2])
     df[Config.INTERACTION_CONTENT] = df[Config.INTERACTION_CONTENT].values.astype('U')
     df[Config.TICKET_SUMMARY] = df[Config.TICKET_SUMMARY].values.astype('U')
-    df["y"] = df[Config.CLASS_COL]
+
+    # check if Config.CLASS_COL is type list or not
+    if  isinstance(Config.CLASS_COL, list):
+        df["y"] = df[Config.CLASS_COL[0]]
+    else:
+        df["y"] = df[Config.CLASS_COL]
+
     df = df.loc[(df["y"] != '') & (~df["y"].isna()),]
+
+    if  isinstance(Config.CLASS_COL, list):
+        df["y"] = df[Config.CLASS_COL].apply(lambda row: '*{:}*'.join(row.values.astype(str)), axis=1)
+
     return df
 
 def de_duplication(data: pd.DataFrame):

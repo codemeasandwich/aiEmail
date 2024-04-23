@@ -1,12 +1,18 @@
 import numpy as np
 import pandas as pd
+
+from Config import Config
 from model.base import BaseModel
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from numpy import *
 import random
+import pickle
+
+from modelling.chainer import Chainer
+
 num_folds = 0
-seed =0
+seed = 0
 # Data
 np.random.seed(seed)
 random.seed(seed)
@@ -32,14 +38,20 @@ class RandomForest(BaseModel):
     def train(self, data) -> None:
         self.mdl = self.mdl.fit(data.X_train, data.y_train)
 
-    def predict(self, X_test: pd.Series):
+    def predict(self, X_test: pd.Series) -> None:
         predictions = self.mdl.predict(X_test)
         self.predictions = predictions
 
-    def print_results(self, data):
-        print(classification_report(data.y_test, self.predictions))
-
+    def print_results(self, data, chainer: Chainer = None, remove_types: int = 0) -> None:
+        y_test = data.y_test
+        predictions = self.predictions
+        if chainer is not None:
+            y_test = chainer.decode_unchained(data.y_test)
+            predictions = chainer.decode_unchained(predictions)
+        if remove_types > 0:
+            y_test = chainer.remove_type(y_test, remove_types)
+            predictions = chainer.remove_type(predictions, remove_types)
+        print(classification_report(y_test, predictions))
 
     def data_transform(self) -> None:
         ...
-

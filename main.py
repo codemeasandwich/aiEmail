@@ -1,7 +1,9 @@
+from modelling.chainer import  Chainer
 from preprocess import *
 from embeddings import *
 from modelling.modelling import *
 from modelling.data_model import *
+from Config import Config
 import random
 seed =0
 random.seed(seed)
@@ -26,11 +28,13 @@ def get_embeddings(df:pd.DataFrame):
     X = get_tfidf_embd(df)  # get tf-idf embeddings
     return X, df
 
+
 def get_data_object(X: np.ndarray, df: pd.DataFrame):
     return Data(X, df)
 
-def perform_modelling(data: Data, df: pd.DataFrame, name):
-    model_predict(data, df, name)
+
+def perform_modelling(data: Data, chainer:Chainer =None):
+    model_predict(data, chainer)
 
 if __name__ == '__main__':
     df = load_data()
@@ -39,8 +43,10 @@ if __name__ == '__main__':
     df[Config.TICKET_SUMMARY] = df[Config.TICKET_SUMMARY].values.astype('U')
     grouped_df = df.groupby(Config.GROUPED)
     for name, group_df in grouped_df:
-        print(name)
+        chained_cols = Config.TYPE_COLS
+        print("Name:", name, "Chained Columns: ", chained_cols)
+        chainer = Chainer(chained_cols)
         X, group_df = get_embeddings(group_df)
+        group_df = chainer.chain_into_one_target_var(group_df)
         data = get_data_object(X, group_df)
-        perform_modelling(data, group_df, name)
-
+        perform_modelling(data, chainer)
