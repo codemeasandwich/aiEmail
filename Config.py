@@ -7,4 +7,3 @@ class Config:
     TYPE_COLS = ['y2', 'y3', 'y4']
     CLASS_COL = 'y2'
     GROUPED = 'y1'
-    CHAINED_COLS = [['y2', 'y3', 'y4'], ['y2', 'y3'], ['y2']]

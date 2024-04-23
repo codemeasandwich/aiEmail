@@ -3,6 +3,7 @@ from preprocess import *
 from embeddings import *
 from modelling.modelling import *
 from modelling.data_model import *
+from Config import Config
 import random
 seed =0
 random.seed(seed)
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     df[Config.TICKET_SUMMARY] = df[Config.TICKET_SUMMARY].values.astype('U')
     grouped_df = df.groupby(Config.GROUPED)
     for name, group_df in grouped_df:
-        chained_cols = ['y2', 'y3', 'y4']
+        chained_cols = Config.TYPE_COLS
         print("Name:", name, "Chained Columns: ", chained_cols)
         chainer = Chainer(chained_cols)
         X, group_df = get_embeddings(group_df)
