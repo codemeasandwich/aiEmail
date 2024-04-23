@@ -42,12 +42,10 @@ if __name__ == '__main__':
     df[Config.TICKET_SUMMARY] = df[Config.TICKET_SUMMARY].values.astype('U')
     grouped_df = df.groupby(Config.GROUPED)
     for name, group_df in grouped_df:
-        Config.CHAINED_COLS = Config.CHAINED_COLS if Config.CHAINED_COLS else [Config.TYPE_COLS]
-        for chained_cols in Config.CHAINED_COLS:
-            print("Name:", name, "Chained Columns: ", chained_cols)
-            chainer = Chainer(chained_cols)
-            X, group_df = get_embeddings(group_df)
-            group_df = chainer.chain_into_one_target_var(group_df)
-            data = get_data_object(X, group_df)
-            perform_modelling(data, chainer)
-
+        chained_cols = ['y2', 'y3', 'y4']
+        print("Name:", name, "Chained Columns: ", chained_cols)
+        chainer = Chainer(chained_cols)
+        X, group_df = get_embeddings(group_df)
+        group_df = chainer.chain_into_one_target_var(group_df)
+        data = get_data_object(X, group_df)
+        perform_modelling(data, chainer)

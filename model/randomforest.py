@@ -38,16 +38,20 @@ class RandomForest(BaseModel):
     def train(self, data) -> None:
         self.mdl = self.mdl.fit(data.X_train, data.y_train)
 
-    def predict(self, X_test: pd.Series, chainer:Chainer=None) -> None:
+    def predict(self, X_test: pd.Series) -> None:
         predictions = self.mdl.predict(X_test)
-        if chainer is not None:
-            predictions = chainer.decode_unchained(predictions)
-
         self.predictions = predictions
 
-    def print_results(self, data, chainer:Chainer=None) -> None:
-
-        print(classification_report(chainer.decode_unchained(data.y_test), self.predictions))
+    def print_results(self, data, chainer: Chainer = None, remove_types: int = 0) -> None:
+        y_test = data.y_test
+        predictions = self.predictions
+        if chainer is not None:
+            y_test = chainer.decode_unchained(data.y_test)
+            predictions = chainer.decode_unchained(predictions)
+        if remove_types > 0:
+            y_test = chainer.remove_type(y_test, remove_types)
+            predictions = chainer.remove_type(predictions, remove_types)
+        print(classification_report(y_test, predictions))
 
     def data_transform(self) -> None:
         ...
